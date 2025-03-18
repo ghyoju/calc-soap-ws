@@ -27,30 +27,7 @@ Session session = HibernateUtil.getCurrentSession();
 session.beginTransaction();
 
 /*
-<settings>
-  ...
-  <profiles>
-    <profile>
-      <id>eap-runtime</id>
-      <repositories>
-        <repository>
-          <id>jboss-eap-8.0.4-runtime-maven-repository</id>
-          <url>file:///path/to/jboss-eap-8.0.4-runtime-maven-repository</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <activeProfile>eap-runtime</activeProfile>
-  </activeProfiles>
-  ...
-</settings>
+
 */
 String sql = "SELECT * FROM my_table";
 List<Object[]> results = session.createNativeQuery(sql).getResultList();
