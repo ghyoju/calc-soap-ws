@@ -1,35 +1,42 @@
-import jakarta.persistence.EntityManagerFactory;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+package com.example.calculator;
 
-public class HibernateUtil {
-    private static SessionFactory sessionFactory;
+import jakarta.annotation.Resource;
+import jakarta.jws.WebService;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
+import org.apache.cxf.phase.PhaseInterceptorChain;
+import org.apache.cxf.message.Message;
 
-    static {
-        try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
+@WebService(
+    endpointInterface = "com.example.calculator.CalculatorService",
+    serviceName = "CalculatorService",
+    portName = "CalculatorPort",
+    targetNamespace = "http://example.com/calculator"
+)
+public class CalculatorServiceImpl implements CalculatorService {
+
+    @Resource
+    private WebServiceContext wsContext;
+
+    private void logMethodName() {
+        Message message = PhaseInterceptorChain.getCurrentMessage();
+        if (message != null) {
+            String operationName = (String) message.get(Message.WSDL_OPERATION);
+            System.out.println("Invoked SOAP method: " + operationName);
+        } else {
+            System.out.println("Could not determine SOAP method name");
         }
     }
 
-    public static Session getCurrentSession() {
-        return sessionFactory.getCurrentSession();
+    @Override
+    public int add(int a, int b) {
+        logMethodName();
+        return a + b;
+    }
+
+    @Override
+    public int subtract(int a, int b) {
+        logMethodName();
+        return a - b;
     }
 }
-
-
----
-
-
-Session session = HibernateUtil.getCurrentSession();
-session.beginTransaction();
-
-/*
-
-*/
-String sql = "SELECT * FROM my_table";
-List<Object[]> results = session.createNativeQuery(sql).getResultList();
-
-session.getTransaction().commit();
